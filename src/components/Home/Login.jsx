@@ -35,21 +35,21 @@ const Login = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    axios.get(`http://localhost:5000/users?email=${email}`)
-      .then(res => {
+    axios.post('https://login-signup-prod.herokuapp.com/login', {   
+        email: email,
+        password: password,
+    })
+    .then(res => {
         console.log(res);
-        if (res.data.length === 0) {
-          alert('User not found');
-        }else{
-          navigate('/home');
-        }
-      }).catch(err=>{
-        console.log(err);
-        if(err.response.data){
-          alert("Invalid email or password");
-        }
-      })
-    }
+        // localStorage.setItem('token', res.data.token);
+        navigate('/home');
+    }).catch(err => {
+        console.log(err.response.data);
+        alert(err.response.data);
+    })
+    }   
+
+     
 
 
   return (

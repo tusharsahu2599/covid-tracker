@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import "./login-sign.css"
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,37 +27,31 @@ const useStyles = makeStyles(theme => ({
 
 const Sign = () => {
   const classes = useStyles();
-  // create state variables for each input
 
+    const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
 
-function isPassword(password) {
-  return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(password);
-}
+
 
   const handleSubmit = e => {
     e.preventDefault();
-    let data = email.split('@');
-    let domain = data[1];
-
-    if(domain === 'gmail.com' && phone.length === 10 && isPassword(password) && password.length >= 8 ){
-      axios.post('http://localhost:5000/users', {
+    axios.post('https://login-signup-prod.herokuapp.com/register', {
         email: email,
         password: password,
-        phone: phone
-      })
-      .then(res => {
+        phone: phone,
+    })
+    .then(res => {
         console.log(res);
-      }).catch(err => {
+        // localStorage.setItem('token', res.data.token);
+        navigate('/home');
+    }).catch(err => {
         console.log(err.response.data);
         alert(err.response.data);
-      })
-    }else{
-      alert('Please enter a valid email, phone number and password');
+    })
     }
-    }
+
   
 
   return (
